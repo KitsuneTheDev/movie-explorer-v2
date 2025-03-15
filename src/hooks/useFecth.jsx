@@ -5,6 +5,7 @@ export default function useFetch(baseUrl) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [movies, setMovies] = useState([]);
+    const [searchResults, setSearchResults] = useState([]);
     const [hasMore, setHasMore] = useState(true);
     const [controller, setcontroller] = useState(null);
 
@@ -42,6 +43,7 @@ export default function useFetch(baseUrl) {
                     console.log("No Data Fetched. Data:", data);
                     setLoading(false);
                     setError(true);
+                    if(data.total_pages === pageNumber) return reject(data);
                     return reject(data);
                 }
                 console.log("success");
@@ -70,7 +72,7 @@ export default function useFetch(baseUrl) {
         setLoading(true);
         setError(false);
 
-        setMovies([]);
+        setSearchResults([]);
 
         if(controller) {
             controller.abort();
@@ -106,7 +108,8 @@ export default function useFetch(baseUrl) {
                 }
                 setLoading(false);
                 setError(false);
-                setMovies(prevMovies => {
+                if(searchResults.total_pages === pageNumber) return reject(data);
+                setSearchResults(prevMovies => {
                     return [...new Set([...prevMovies, ...data.results])];
                 });
                 console.log("success");
@@ -123,5 +126,5 @@ export default function useFetch(baseUrl) {
         })
     }
 
-    return { get, loading, error, movies, hasMore, search }
+    return { get, loading, error, movies, hasMore, search, searchResults }
 }

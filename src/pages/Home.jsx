@@ -8,7 +8,7 @@ export default function Home() {
 
     return(
         <div className="home-page-container">
-            <Movies />
+            <Movies movies={context.movies} />
         </div>
     );
 }

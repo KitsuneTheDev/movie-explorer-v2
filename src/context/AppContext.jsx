@@ -8,7 +8,7 @@ function AppProvider(props) {
     const [pageNumber, setPageNumber] = useState(1);
     const observer = useRef(null);
 
-    const { get, loading, error, movies, hasMore, search } = useFetch(`https://api.themoviedb.org/3/`);
+    const { get, loading, error, movies, hasMore, search, searchResults } = useFetch(`https://api.themoviedb.org/3/`);
 
     const loadMore = (node) => {
         if(!node) return;
@@ -42,6 +42,7 @@ function AppProvider(props) {
         changeQuery: changeQuery,
         // loadMovies: loadMovies,
         loadMore: loadMore,
+        searchResults: searchResults,
     };
 
     return (

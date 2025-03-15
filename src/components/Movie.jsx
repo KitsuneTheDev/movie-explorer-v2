@@ -1,12 +1,16 @@
-import { useRef, useContext, useCallback, forwardRef, useEffect } from "react";
+import { useRef, useContext, useCallback, forwardRef, useEffect, useState } from "react";
 import { genreNames } from "../constants/ApiVariables.jsx";
 import { AppContext } from "../context/AppContext.jsx";
+import FavButton from "./FavButton.jsx";
 
 const Movie = forwardRef((props, ref) => {
+
+    const [isFaved, setIsFaved] = useState(false);
 
     const hoverRef = useRef();
     const contentRef = useRef();
     const lastItemRef = useRef();
+
     const context = useContext(AppContext);
 
     useEffect(() => {
@@ -29,6 +33,12 @@ const Movie = forwardRef((props, ref) => {
         } 
     }, []);
 
+    const handleFavClick = () => {
+        setIsFaved(prevFaved => {
+            return !prevFaved;
+        });
+    }
+
     return(
         <div className="movie-container group flex flex-col items-center gap-2 font-bold border-2 border-gray-500 rounded-sm overflow-hidden hover:cursor-default mt-2" ref={(element) => {
             if(props.lastItemRef !== undefined) props.lastItemRef.current = element;
@@ -39,6 +49,9 @@ const Movie = forwardRef((props, ref) => {
                 <div className="relative">
                     <img src={`https://image.tmdb.org/t/p/original/${props.image}`} className="static group-hover:opacity-25" alt={props.title} />
                     <div ref={contentRef} className="additional-info-container hidden top-0 left-0 z-10 ml-1 mt-2 text-sm font-medium">
+                        <div onClick={handleFavClick} className="heart-container h-fit w-fit hover:cursor-pointer" isFaved = {isFaved}>
+                            <FavButton isFaved={isFaved} />
+                        </div>
                         <p className="mb-2 font-bold">Original title: <span className="font-medium">{props.original_title}</span></p>
                         <p className="mb-2 font-bold">Original language: <span className="font-medium">{props.original_language.toUpperCase()}</span></p>
                         <p className="mb-2 font-bold">Description: <span className="font-medium">{`${props.description.slice(0, 100)}...`}</span></p>
