@@ -12,7 +12,7 @@ export default function Movies(props) {
             {movies.map((movie, index) => {
                 if(index + 1 !== movies.length) {
                     return(
-                        <Movie key={movie.id} id={movie.id} title={movie.title} image={movie.poster_path} rating={movie.vote_average} description={movie.overview} original_title={movie.original_title}
+                        <Movie key={movie.id} title={movie.title} image={movie.poster_path} rating={movie.vote_average} description={movie.overview} original_title={movie.original_title}
                         original_language={movie.original_language} release_date={movie.release_date} genre_ids={movie.genre_ids}/>
                     );
                 }

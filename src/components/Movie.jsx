@@ -5,23 +5,18 @@ import FavButton from "./FavButton.jsx";
 
 const Movie = forwardRef((props, ref) => {
 
-    const context = useContext(AppContext);
-
-    const [isFaved, setIsFaved] = useState(() => {
-        return context.favoriteMovies.some(movie => movie.id === props.id);
-    });
-
-    useEffect(() => {
-        setIsFaved(context.favoriteMovies.some(movie => movie.id === props.id));
-    }, [context.favoriteMovies, props.id])
+    const [isFaved, setIsFaved] = useState(false);
 
     const hoverRef = useRef();
     const contentRef = useRef();
     const lastItemRef = useRef();
 
+    const context = useContext(AppContext);
+
     useEffect(() => {
         if(!lastItemRef.current) return;
         context.loadMore(lastItemRef.current);
+        console.log(lastItemRef);
     }, []);
 
     const handleMouseEnter = useCallback(() => {
@@ -39,20 +34,9 @@ const Movie = forwardRef((props, ref) => {
     }, []);
 
     const handleFavClick = () => {
-        if(!isFaved) {
-            const movie = {
-                id: props.id,
-                title: props.title,
-                poster_path: props.image,
-                vote_average: props.rating,
-                overview: props.description,
-                original_title: props.original_title,
-                original_language: props.original_language,
-                release_date: props.release_date,
-                genre_ids: props.genre_ids,
-            };
-            context.addFavedMovie(movie);
-        } return;
+        setIsFaved(prevFaved => {
+            return !prevFaved;
+        });
     }
 
     return(
@@ -64,8 +48,8 @@ const Movie = forwardRef((props, ref) => {
             <div className="image-container">
                 <div className="relative">
                     <img src={`https://image.tmdb.org/t/p/original/${props.image}`} className="static group-hover:opacity-25" alt={props.title} />
-                    <div ref={contentRef} className="additional-info-container hidden top-0 left-0 z-1 ml-1 mt-2 text-sm font-medium">
-                        <div onClick={handleFavClick} className="heart-container h-fit w-fit hover:cursor-pointer">
+                    <div ref={contentRef} className="additional-info-container hidden top-0 left-0 z-10 ml-1 mt-2 text-sm font-medium">
+                        <div onClick={handleFavClick} className="heart-container h-fit w-fit hover:cursor-pointer" isFaved = {isFaved}>
                             <FavButton isFaved={isFaved} />
                         </div>
                         <p className="mb-2 font-bold">Original title: <span className="font-medium">{props.original_title}</span></p>
