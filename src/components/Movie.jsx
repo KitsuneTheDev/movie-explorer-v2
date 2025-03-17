@@ -45,16 +45,16 @@ const Movie = forwardRef((props, ref) => {
             hoverRef.current = element;
             if(ref) lastItemRef.current = element;
         }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <div className="image-container">
+            <div className="image-container h-full w-full">
                 <div className="relative">
                     <img src={`https://image.tmdb.org/t/p/original/${props.image}`} className="static group-hover:opacity-25" alt={props.title} />
-                    <div ref={contentRef} className="additional-info-container hidden top-0 left-0 z-10 ml-1 mt-2 text-sm font-medium">
+                    <div ref={contentRef} className="additional-info-container hidden top-0 left-0 z-1 ml-1 mt-2 text-sm h-full w-full font-medium">
                         <div onClick={handleFavClick} className="heart-container h-fit w-fit hover:cursor-pointer" isFaved = {isFaved}>
                             <FavButton isFaved={isFaved} />
                         </div>
                         <p className="mb-2 font-bold">Original title: <span className="font-medium">{props.original_title}</span></p>
                         <p className="mb-2 font-bold">Original language: <span className="font-medium">{props.original_language.toUpperCase()}</span></p>
-                        <p className="mb-2 font-bold">Description: <span className="font-medium">{`${props.description.slice(0, 100)}...`}</span></p>
+                        <p className="mb-2 font-bold">Description: <span className="font-medium">{props.description && `${props.description.slice(0, 100)}...`}</span></p>
                         <p className="mb-2 font-bold">Release data: <span className="font-medium">{props.release_date}</span></p>
                         <p className="mb-2 font-bold">Genre: 
                             <span className="font-medium">

@@ -8,7 +8,7 @@ export default function Navbar() {
     const context = useContext(AppContext);
 
     return(
-        <div className="sticky top-0 z-1">
+        <div className="sticky top-0 z-2">
             <div className="navbar-container flex items-center w-full bg-gray-500 text-2xl h-[4em] text-amber-50 font-bold">
                 <div className="logo-container h-full w-[30%] flex items-center overflow-hidden">
                     <img alt="site-logo" src="../../images/logo.png" className="logo-image w-[80%]" />

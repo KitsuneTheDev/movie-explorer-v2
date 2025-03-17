@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, createContext, useRef } from "react";
+import { useState, useEffect, createContext, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import useFetch from "../hooks/useFecth";
 
 const AppContext = createContext();
@@ -6,9 +7,13 @@ const AppContext = createContext();
 function AppProvider(props) {
 
     const [pageNumber, setPageNumber] = useState(1);
+    const [resultsPageNumber, setResultsPageNumber] = useState(1);
+    const [query, setQuery] = useState('');
     const observer = useRef(null);
 
-    const { get, loading, error, movies, hasMore, search, searchResults } = useFetch(`https://api.themoviedb.org/3/`);
+    const location = useLocation();
+
+    const { get, loading, error, movies, hasMore, search, searchResults, setSearchResults } = useFetch(`https://api.themoviedb.org/3/`);
 
     const loadMore = (node) => {
         if(!node) return;
@@ -19,20 +24,33 @@ function AppProvider(props) {
             console.log(entries);
             if(entries.isIntersecting && hasMore) {
                 console.log("visible");
-                setPageNumber(prevPageNumber => prevPageNumber + 1);
+                if(location.pathname === "/") setPageNumber(prevPageNumber => prevPageNumber + 1);
+                else if(location.pathname === "/search") setResultsPageNumber(prevPageNumber => prevPageNumber + 1);
+                else return;
             }
         });
         observer.current.observe(node);
     }
 
     function changeQuery(query) {
-        if(!query) setPageNumber(1);
-        search(query, pageNumber);
+        setResultsPageNumber(1);
+        setQuery(query);
+        setSearchResults([]);
     }
 
     useEffect(() => {
-        get(pageNumber);
-    }, [pageNumber])
+        console.log(location.pathname)
+        if(location.pathname !== "/search") setQuery("");
+    }, [location])
+
+    useEffect(() => {
+        search(query, resultsPageNumber);
+    }, [query, location, resultsPageNumber])
+
+    useEffect(() => {
+            setQuery("");
+            get(pageNumber);
+        }, [pageNumber])
 
     const value = {
         loading: loading,

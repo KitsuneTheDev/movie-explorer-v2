@@ -9,16 +9,16 @@ function App() {
 
   return (
     <>
-    <AppProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AppProvider>
         <Navbar />
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/favorites" element={<Favorites />}></Route>
             <Route path="/search" element={<Search />}></Route>
           </Routes>
-      </BrowserRouter>
-    </AppProvider>
+      </AppProvider>
+    </BrowserRouter>
     </>
   )
 }

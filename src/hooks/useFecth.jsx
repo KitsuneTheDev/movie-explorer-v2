@@ -50,8 +50,6 @@ export default function useFetch(baseUrl) {
                 setError(false);
                 setLoading(false);
                 setMovies(prevMovies => {
-                    console.log("newMovies -->", data.results);
-                    console.log("prevMovies -->", prevMovies);
                     return [...new Set([...prevMovies, ...data.results])];
                 });
                 return resolve();
@@ -71,8 +69,6 @@ export default function useFetch(baseUrl) {
 
         setLoading(true);
         setError(false);
-
-        setSearchResults([]);
 
         if(controller) {
             controller.abort();
@@ -108,9 +104,8 @@ export default function useFetch(baseUrl) {
                 }
                 setLoading(false);
                 setError(false);
-                if(searchResults.total_pages === pageNumber) return reject(data);
-                setSearchResults(prevMovies => {
-                    return [...new Set([...prevMovies, ...data.results])];
+                setSearchResults(prevResults => {
+                    return [...new Set([...prevResults, ...data.results])];
                 });
                 console.log("success");
                 resolve();
@@ -126,5 +121,5 @@ export default function useFetch(baseUrl) {
         })
     }
 
-    return { get, loading, error, movies, hasMore, search, searchResults }
+    return { get, loading, error, movies, hasMore, search, searchResults, setSearchResults }
 }

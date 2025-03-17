@@ -4,11 +4,11 @@ import { AppContext } from "../context/AppContext";
 
 export default function Home() {
 
-    const context = useContext(AppContext);
+    const { movies } = useContext(AppContext);
 
     return(
         <div className="home-page-container">
-            <Movies movies={context.movies} />
+            <Movies movies={movies} />
         </div>
     );
 }
