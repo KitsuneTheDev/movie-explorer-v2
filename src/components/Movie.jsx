@@ -5,13 +5,16 @@ import FavButton from "./FavButton.jsx";
 
 const Movie = forwardRef((props, ref) => {
 
-    const [isFaved, setIsFaved] = useState(false);
+    const context = useContext(AppContext);
 
     const hoverRef = useRef();
     const contentRef = useRef();
     const lastItemRef = useRef();
-
-    const context = useContext(AppContext);
+    const [isFaved, setIsFaved] = useState(() => {
+        return context.favoriteMovies.some(movie => {
+            return movie.title === props.title;
+        })
+    });
 
     useEffect(() => {
         if(!lastItemRef.current) return;
@@ -34,9 +37,30 @@ const Movie = forwardRef((props, ref) => {
     }, []);
 
     const handleFavClick = () => {
-        setIsFaved(prevFaved => {
-            return !prevFaved;
+
+        if(!isFaved) {
+            const newFavorite = {
+            id: props.id,
+            poster_path: props.image,
+            title: props.title,
+            original_title: props.original_title,
+            original_language: props.original_language,
+            description: props.description,
+            release_date: props.release_date,
+            genre_ids: props.genre_ids,
+            vote_average: props.rating,
+        };
+        context.setFavoriteMovies(prevMovies => {
+            return [...new Set([...prevMovies, newFavorite])];
         });
+        setIsFaved(true);
+        } else {
+            context.setFavoriteMovies(context.favoriteMovies.filter(movie => {
+                console.log("Deleting favorites", "movie id: ", movie.id, "props.id", props.id);
+                return movie.title !== props.title;
+            }));
+            setIsFaved(false);
+        }
     }
 
     return(
@@ -47,7 +71,7 @@ const Movie = forwardRef((props, ref) => {
         }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <div className="image-container h-full w-full">
                 <div className="relative">
-                    <img src={`https://image.tmdb.org/t/p/original/${props.image}`} className="static group-hover:opacity-25" alt={props.title} />
+                    {props.image ? <img src={`https://image.tmdb.org/t/p/original/${props.image}`} className="group-hover:opacity-25" alt={props.title} /> : <h2 className="text-2xl text-center text-gray-500 group-hover:opacity-25">No Image</h2>}
                     <div ref={contentRef} className="additional-info-container hidden top-0 left-0 z-1 ml-1 mt-2 text-sm h-full w-full font-medium">
                         <div onClick={handleFavClick} className="heart-container h-fit w-fit hover:cursor-pointer" isFaved = {isFaved}>
                             <FavButton isFaved={isFaved} />

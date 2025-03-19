@@ -8,6 +8,9 @@ function AppProvider(props) {
 
     const [pageNumber, setPageNumber] = useState(1);
     const [resultsPageNumber, setResultsPageNumber] = useState(1);
+    const [favoriteMovies, setFavoriteMovies] = useState(() => {
+        return JSON.parse(localStorage.getItem('movies')) || [];
+    });
     const [query, setQuery] = useState('');
     const observer = useRef(null);
 
@@ -39,6 +42,12 @@ function AppProvider(props) {
     }
 
     useEffect(() => {
+        console.log("Saving favorites");
+        localStorage.setItem('movies', JSON.stringify(favoriteMovies));
+        console.log("Favorites saved. Favorite Movies: ", favoriteMovies);
+    }, [favoriteMovies])
+
+    useEffect(() => {
         console.log(location.pathname)
         if(location.pathname !== "/search") setQuery("");
     }, [location])
@@ -50,7 +59,8 @@ function AppProvider(props) {
     useEffect(() => {
             setQuery("");
             get(pageNumber);
-        }, [pageNumber])
+        }, [pageNumber]);
+
 
     const value = {
         loading: loading,
@@ -58,9 +68,10 @@ function AppProvider(props) {
         hasMore: hasMore,
         movies: movies,
         changeQuery: changeQuery,
-        // loadMovies: loadMovies,
         loadMore: loadMore,
         searchResults: searchResults,
+        favoriteMovies: favoriteMovies,
+        setFavoriteMovies: setFavoriteMovies,
     };
 
     return (
