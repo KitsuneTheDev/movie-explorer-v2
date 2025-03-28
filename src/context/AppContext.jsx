@@ -11,6 +11,9 @@ function AppProvider(props) {
     const [favoriteMovies, setFavoriteMovies] = useState(() => {
         return JSON.parse(localStorage.getItem('movies')) || [];
     });
+    const [storedFavorites, setStoredFavorites] = useState(() => {
+        return JSON.parse(localStorage.getItem('movies')) || [];
+    })
     const [query, setQuery] = useState('');
     const observer = useRef(null);
 
@@ -45,6 +48,8 @@ function AppProvider(props) {
         console.log("Saving favorites");
         localStorage.setItem('movies', JSON.stringify(favoriteMovies));
         console.log("Favorites saved. Favorite Movies: ", favoriteMovies);
+        setStoredFavorites(JSON.parse(localStorage.getItem('movies')));
+        console.log("stored", storedFavorites);
     }, [favoriteMovies])
 
     useEffect(() => {
@@ -72,6 +77,8 @@ function AppProvider(props) {
         searchResults: searchResults,
         favoriteMovies: favoriteMovies,
         setFavoriteMovies: setFavoriteMovies,
+        storedFavorites: storedFavorites,
+        setStoredFavorites: setStoredFavorites,
     };
 
     return (

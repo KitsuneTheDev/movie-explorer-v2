@@ -51,15 +51,16 @@ const Movie = forwardRef((props, ref) => {
             vote_average: props.rating,
         };
         context.setFavoriteMovies(prevMovies => {
-            return [...new Set([...prevMovies, newFavorite])];
+            const updatedMovies = [...new Set([...prevMovies, newFavorite])];
+            console.log("setting favoriteMovies: ", updatedMovies);
+            setIsFaved(true);
+            return updatedMovies;
         });
-        setIsFaved(true);
-        } else {
+        } else if(isFaved){
             context.setFavoriteMovies(context.favoriteMovies.filter(movie => {
                 console.log("Deleting favorites", "movie id: ", movie.id, "props.id", props.id);
                 return movie.title !== props.title;
             }));
-            setIsFaved(false);
         }
     }
 
